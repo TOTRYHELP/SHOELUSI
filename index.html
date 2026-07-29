@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garage Care - POS System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #050505; color: #e5e5e5; }
+    .mono-card { background-color: #0d0d0d; border: 1px solid #262626; }
+    .mono-input { background-color: #121212; border: 1px solid #262626; color: #ffffff; }
+    .mono-input:focus { border-color: #ffffff; outline: none; }
+  </style>
+</head>
+<body class="min-h-screen font-sans flex flex-col selection:bg-white selection:text-black">
+
+  <!-- Header Navigation -->
+  <header class="bg-black/90 border-b border-zinc-800 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-white text-black flex items-center justify-center font-black text-xl">
+          G
+        </div>
+        <div>
+          <h1 class="font-extrabold text-base tracking-widest text-white uppercase">GARAGE CARE</h1>
+          <p class="text-[10px] text-zinc-500 tracking-wider">SHOES & LEATHER SERVICE</p>
+        </div>
+      </div>
+
+      <!-- Tab Buttons Navigation -->
+      <nav class="flex gap-1 bg-zinc-900/80 p-1 rounded-xl border border-zinc-800">
+        <button onclick="switchTab('customer')" id="tab-customer" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-white text-black shadow-sm">
+          <i class="fa-solid fa-user-plus"></i> PELANGGAN
+        </button>
+        <button onclick="switchTab('invoice')" id="tab-invoice" class="px-4 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition flex items-center gap-2">
+          <i class="fa-solid fa-receipt"></i> FAKTUR
+        </button>
+        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-4 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition flex items-center gap-2">
+          <i class="fa-solid fa-chart-simple"></i> DASHBOARD
+        </button>
+        <button onclick="switchTab('crm')" id="tab-crm" class="px-4 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition flex items-center gap-2">
+          <i class="fa-brands fa-whatsapp"></i> CRM WA
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
+
+    <!-- PAGE 1: CUSTOMER -->
+    <section id="page-customer" class="block">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 mono-card p-6 rounded-2xl">
+          <h2 class="text-base font-bold mb-6 text-white uppercase tracking-wider flex items-center gap-2 border-b border-zinc-800 pb-3">
+            <i class="fa-solid fa-address-card"></i> Input Data Pelanggan
+          </h2>
+          <form id="form-customer" onsubmit="handleCustomerSubmit(event)" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">CREW / OPERATOR</label>
+                <select id="cust-crew" required class="w-full mono-input rounded-xl p-3 text-sm">
+                  <option value="">-- Pilih Crew --</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">TANGGAL</label>
+                <input type="date" id="cust-tanggal" required class="w-full mono-input rounded-xl p-3 text-sm">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">NAMA PELANGGAN</label>
+                <input type="text" id="cust-nama" required placeholder="Nama Lengkap" class="w-full mono-input rounded-xl p-3 text-sm">
+              </div>
+              <div>
+                <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">KONTAK (WHATSAPP)</label>
+                <input type="tel" id="cust-kontak" required placeholder="08xxxxxxxxxx" class="w-full mono-input rounded-xl p-3 text-sm">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">BRAND</label>
+                <input type="text" id="cust-brand" placeholder="Nike, Adidas, dll" class="w-full mono-input rounded-xl p-3 text-sm">
+              </div>
+              <div>
+                <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">TYPE</label>
+                <input type="text" id="cust-type" placeholder="Air Max, Samba, dll" class="w-full mono-input rounded-xl p-3 text-sm">
+              </div>
+              <div>
+                <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">SIZE</label>
+                <input type="text" id="cust-size" placeholder="42" class="w-full mono-input rounded-xl p-3 text-sm">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">FOTO SEPATU (UPLOAD DRIVER)</label>
+              <input type="file" id="cust-foto" accept="image/*" onchange="previewCustomerImage(event)" class="w-full mono-input rounded-xl p-2 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-white file:text-black file:font-bold">
+            </div>
+
+            <button type="submit" id="btn-save-cust" class="w-full bg-white hover:bg-zinc-200 text-black font-extrabold py-3.5 rounded-xl transition uppercase tracking-wider text-xs flex justify-center items-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i> Simpan Data Pelanggan
+            </button>
+          </form>
+        </div>
+
+        <!-- Spotlight Item Preview -->
+        <div class="mono-card p-6 rounded-2xl flex flex-col items-center justify-center text-center">
+          <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Spotlight Input Preview</h3>
+          <div class="w-full aspect-square rounded-xl bg-black border border-zinc-800 overflow-hidden flex items-center justify-center relative mb-4">
+            <img id="img-preview" src="https://via.placeholder.com/400x400/000000/333333?text=Preview+Foto" class="w-full h-full object-cover">
+          </div>
+          <p class="text-[11px] text-zinc-500">Foto akan disimpan secara otomatis di Google Drive.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 2: INVOICE (With Spotlight Image) -->
+    <section id="page-invoice" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left Customer Info & Spotlight -->
+        <div class="mono-card p-6 rounded-2xl space-y-5">
+          <h2 class="text-base font-bold text-white uppercase tracking-wider border-b border-zinc-800 pb-3 flex items-center gap-2">
+            <i class="fa-solid fa-user-check"></i> Data Pelanggan
+          </h2>
+          <div>
+            <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">CARI PELANGGAN (SUGGEST FILTER)</label>
+            <input type="text" id="inv-cust-search" list="cust-suggestions" oninput="onCustomerSelect()" placeholder="Ketik nama..." class="w-full mono-input rounded-xl p-3 text-sm">
+            <datalist id="cust-suggestions"></datalist>
+          </div>
+
+          <div class="space-y-2 text-xs bg-black p-4 rounded-xl border border-zinc-800">
+            <div class="flex justify-between"><span class="text-zinc-500">Crew:</span> <span id="inv-crew" class="font-bold text-white">-</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Tgl Masuk:</span> <span id="inv-tgl" class="font-bold text-white">-</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Kontak:</span> <span id="inv-kontak" class="font-bold text-white">-</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Item:</span> <span id="inv-brand-type" class="font-bold text-white">-</span></div>
+            <div class="flex justify-between"><span class="text-zinc-500">Size:</span> <span id="inv-size" class="font-bold text-white">-</span></div>
+          </div>
+
+          <!-- SPOTLIGHT FOTO SEPATU (TIDAK DICETAK DALAM PDF) -->
+          <div class="border-t border-zinc-800 pt-4">
+            <span class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-2 text-center">Spotlight Sepatu Pelanggan</span>
+            <div class="w-full aspect-square rounded-xl bg-black border border-zinc-800 overflow-hidden flex items-center justify-center">
+              <img id="inv-spotlight-img" src="https://via.placeholder.com/400x400/000000/333333?text=Tidak+Ada+Foto" class="w-full h-full object-cover">
+            </div>
+            <p class="text-[10px] text-zinc-500 text-center mt-2">*Foto spotlight ini hanya acuan visual dan tidak akan dicetak ke PDF.</p>
+          </div>
+        </div>
+
+        <!-- Right Invoice Table & Batch Submit -->
+        <div class="lg:col-span-2 mono-card p-6 rounded-2xl space-y-5">
+          <h2 class="text-base font-bold text-white uppercase tracking-wider border-b border-zinc-800 pb-3 flex items-center gap-2">
+            <i class="fa-solid fa-list"></i> Input Treatment & Transaksi
+          </h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">TREATMENT</label>
+              <input type="text" id="inv-treatment" list="treatment-suggestions" onchange="onTreatmentSelect()" placeholder="Pilih / Custom" class="w-full mono-input rounded-xl p-2.5 text-sm">
+              <datalist id="treatment-suggestions"></datalist>
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">HARGA (RP)</label>
+              <input type="number" id="inv-harga" placeholder="0" class="w-full mono-input rounded-xl p-2.5 text-sm">
+            </div>
+            <div>
+              <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">DISKON SATUAN (RP)</label>
+              <div class="flex gap-2">
+                <input type="number" id="inv-diskon-satuan" value="0" class="w-full mono-input rounded-xl p-2.5 text-sm">
+                <button type="button" onclick="addItemToBatch()" class="bg-white hover:bg-zinc-200 text-black font-bold px-4 rounded-xl text-sm"><i class="fa-solid fa-plus"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Batch Table -->
+          <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-black">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-zinc-900 text-zinc-400 border-b border-zinc-800 uppercase">
+                <tr>
+                  <th class="p-3">Treatment</th>
+                  <th class="p-3">Harga</th>
+                  <th class="p-3">Diskon</th>
+                  <th class="p-3">Subtotal</th>
+                  <th class="p-3 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-batch-body" class="divide-y divide-zinc-900">
+                <tr><td colspan="5" class="p-4 text-center text-zinc-600">Belum ada treatment ditambahkan</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div>
+              <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">DISKON TAMBAHAN (AKHIR)</label>
+              <input type="number" id="inv-diskon-tambahan" oninput="calculateTotal()" value="0" class="w-full mono-input rounded-xl p-3 text-sm">
+            </div>
+            <div class="text-right flex flex-col justify-end">
+              <span class="text-[10px] text-zinc-400 uppercase tracking-wider">TOTAL PEMBAYARAN</span>
+              <span id="lbl-total-akhir" class="text-2xl font-black text-white">Rp 0</span>
+            </div>
+          </div>
+
+          <button onclick="submitInvoice()" class="w-full bg-white hover:bg-zinc-200 text-black font-extrabold py-3.5 rounded-xl transition uppercase tracking-wider text-xs flex justify-center items-center gap-2">
+            <i class="fa-solid fa-print"></i> Submit & Cetak PDF Invoice
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PAGE 3: DASHBOARD -->
+    <section id="page-dashboard" class="hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="mono-card p-6 rounded-2xl flex items-center gap-4">
+          <div class="p-4 rounded-xl bg-white text-black font-bold"><i class="fa-solid fa-users text-xl"></i></div>
+          <div>
+            <p class="text-[10px] text-zinc-500 uppercase tracking-widest">TOTAL PELANGGAN</p>
+            <h3 id="dash-total-cust" class="text-2xl font-extrabold text-white">0</h3>
+          </div>
+        </div>
+        <div class="mono-card p-6 rounded-2xl flex items-center gap-4">
+          <div class="p-4 rounded-xl bg-white text-black font-bold"><i class="fa-solid fa-file-invoice text-xl"></i></div>
+          <div>
+            <p class="text-[10px] text-zinc-500 uppercase tracking-widest">TOTAL FAKTUR</p>
+            <h3 id="dash-total-faktur" class="text-2xl font-extrabold text-white">0</h3>
+          </div>
+        </div>
+        <div class="mono-card p-6 rounded-2xl flex items-center gap-4">
+          <div class="p-4 rounded-xl bg-white text-black font-bold"><i class="fa-solid fa-wallet text-xl"></i></div>
+          <div>
+            <p class="text-[10px] text-zinc-500 uppercase tracking-widest">TOTAL OMSET</p>
+            <h3 id="dash-total-omset" class="text-2xl font-extrabold text-white">Rp 0</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="mono-card p-6 rounded-2xl space-y-4">
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Data Pelanggan Terdaftar</h3>
+        <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-black">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-zinc-900 text-zinc-400 border-b border-zinc-800 uppercase">
+              <tr>
+                <th class="p-3">ID Cust</th>
+                <th class="p-3">Nama</th>
+                <th class="p-3">Kontak</th>
+                <th class="p-3">Sepatu</th>
+                <th class="p-3">Crew</th>
+                <th class="p-3">Foto Drive</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-cust-body" class="divide-y divide-zinc-900">
+              <tr><td colspan="6" class="p-4 text-center text-zinc-600">Loading data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 4: CRM WA -->
+    <section id="page-crm" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="mono-card p-6 rounded-2xl space-y-4">
+          <h2 class="text-base font-bold text-white uppercase tracking-wider border-b border-zinc-800 pb-3 flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i> Template Pesan WA
+          </h2>
+          <p class="text-[10px] text-zinc-500">Variabel: <code class="text-white">{NAMA}</code>, <code class="text-white">{BRAND}</code>, <code class="text-white">{TYPE}</code></p>
+          <textarea id="crm-template" rows="8" class="w-full mono-input rounded-xl p-3 text-xs">Halo {NAMA}, terima kasih telah mempercayakan perawatan {BRAND} {TYPE} Anda di GARAGE CARE! Sepatu Anda telah siap. Terima kasih! 👟</textarea>
+        </div>
+
+        <div class="lg:col-span-2 mono-card p-6 rounded-2xl space-y-4">
+          <h2 class="text-base font-bold text-white uppercase tracking-wider border-b border-zinc-800 pb-3 flex items-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Broadcast Pelanggan
+          </h2>
+          <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-black">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-zinc-900 text-zinc-400 border-b border-zinc-800 uppercase">
+                <tr>
+                  <th class="p-3">Pelanggan</th>
+                  <th class="p-3">Kontak</th>
+                  <th class="p-3">Sepatu</th>
+                  <th class="p-3 text-center">Kirim WA</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-crm-body" class="divide-y divide-zinc-900">
+                <tr><td colspan="4" class="p-4 text-center text-zinc-600">Loading data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // GANTIKAN URL INI DENGAN WEB APP URL ANDA DARI GOOGLE APPS SCRIPT
+    const API_URL = "https://script.google.com/macros/s/AKfycbx_YOUR_DEPLOYMENT_ID/exec"; 
+
+    let globalOperators = { crews: [], treatments: [] };
+    let globalCustomers = [];
+    let batchItems = [];
+    let selectedCust = null;
+
+    window.onload = function() {
+      document.getElementById('cust-tanggal').valueAsDate = new Date();
+      fetchOperators();
+      fetchCustomers();
+      fetchDashboardData();
+    };
+
+    // Tab Navigation
+    function switchTab(tabName) {
+      ['customer', 'invoice', 'dashboard', 'crm'].forEach(t => {
+        document.getElementById(`page-${t}`).classList.add('hidden');
+        document.getElementById(`tab-${t}`).className = "px-4 py-2 rounded-lg text-xs font-bold text-zinc-400 hover:text-white transition flex items-center gap-2";
+      });
+      document.getElementById(`page-${tabName}`).classList.remove('hidden');
+      document.getElementById(`tab-${tabName}`).className = "px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-white text-black shadow-sm";
+    }
+
+    async function fetchOperators() {
+      try {
+        const res = await fetch(`${API_URL}?action=getOperators`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          globalOperators = data;
+          const crewSelect = document.getElementById('cust-crew');
+          crewSelect.innerHTML = '<option value="">-- Pilih Crew --</option>';
+          data.crews.forEach(c => { crewSelect.innerHTML += `<option value="${c}">${c}</option>`; });
+
+          const treatList = document.getElementById('treatment-suggestions');
+          treatList.innerHTML = '';
+          data.treatments.forEach(t => { treatList.innerHTML += `<option value="${t.name}">`; });
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    async function fetchCustomers() {
+      try {
+        const res = await fetch(`${API_URL}?action=getCustomers`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          globalCustomers = data.data;
+          const custSuggest = document.getElementById('cust-suggestions');
+          custSuggest.innerHTML = '';
+          data.data.forEach(c => { custSuggest.innerHTML += `<option value="${c.nama}">`; });
+          renderCustomerTable();
+          renderCRMTable();
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    async function fetchDashboardData() {
+      try {
+        const res = await fetch(`${API_URL}?action=getDashboard`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          document.getElementById('dash-total-cust').innerText = data.totalPelanggan;
+          document.getElementById('dash-total-faktur').innerText = data.totalFaktur;
+          document.getElementById('dash-total-omset').innerText = 'Rp ' + Number(data.totalOmset).toLocaleString('id-ID');
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    let base64Photo = "";
+    function previewCustomerImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('img-preview').src = e.target.result;
+          base64Photo = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function handleCustomerSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-cust');
+      btn.disabled = true;
+      btn.innerText = "SAVING...";
+
+      const payload = {
+        action: 'addCustomer',
+        crew: document.getElementById('cust-crew').value,
+        tanggal: document.getElementById('cust-tanggal').value,
+        nama: document.getElementById('cust-nama').value,
+        kontak: document.getElementById('cust-kontak').value,
+        brand: document.getElementById('cust-brand').value,
+        type: document.getElementById('cust-type').value,
+        size: document.getElementById('cust-size').value,
+        photoBase64: base64Photo
+      };
+
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (data.status === 'success') {
+          alert("Pelanggan Tersimpan: " + data.id);
+          document.getElementById('form-customer').reset();
+          document.getElementById('img-preview').src = "https://via.placeholder.com/400x400/000000/333333?text=Preview+Foto";
+          base64Photo = "";
+          fetchCustomers();
+          fetchDashboardData();
+        }
+      } catch (err) { alert("Gagal menyimpan."); }
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan Data Pelanggan`;
+    }
+
+    // Select Customer in Invoice Page + Populate Spotlight Photo
+    function onCustomerSelect() {
+      const val = document.getElementById('inv-cust-search').value;
+      const found = globalCustomers.find(c => c.nama.toLowerCase() === val.toLowerCase());
+      if (found) {
+        selectedCust = found;
+        document.getElementById('inv-crew').innerText = found.crew;
+        document.getElementById('inv-tgl').innerText = found.tanggal;
+        document.getElementById('inv-kontak').innerText = found.kontak;
+        document.getElementById('inv-brand-type').innerText = `${found.brand} / ${found.type}`;
+        document.getElementById('inv-size').innerText = found.size;
+
+        // Populate Spotlight Photo jika ada
+        const spotlightImg = document.getElementById('inv-spotlight-img');
+        if (found.foto) {
+          spotlightImg.src = found.foto;
+        } else {
+          spotlightImg.src = "https://via.placeholder.com/400x400/000000/333333?text=Tidak+Ada+Foto";
+        }
+      }
+    }
+
+    function onTreatmentSelect() {
+      const val = document.getElementById('inv-treatment').value;
+      const found = globalOperators.treatments.find(t => t.name.toLowerCase() === val.toLowerCase());
+      if (found) {
+        document.getElementById('inv-harga').value = found.price;
+      }
+    }
+
+    function addItemToBatch() {
+      const treatment = document.getElementById('inv-treatment').value;
+      const harga = Number(document.getElementById('inv-harga').value) || 0;
+      const diskonSatuan = Number(document.getElementById('inv-diskon-satuan').value) || 0;
+
+      if (!treatment || harga <= 0) {
+        alert("Isi treatment dan harga valid!");
+        return;
+      }
+
+      batchItems.push({ treatment, harga, diskonSatuan });
+      renderBatchTable();
+      
+      document.getElementById('inv-treatment').value = "";
+      document.getElementById('inv-harga').value = "";
+      document.getElementById('inv-diskon-satuan').value = "0";
+    }
+
+    function removeBatchItem(index) {
+      batchItems.splice(index, 1);
+      renderBatchTable();
+    }
+
+    function renderBatchTable() {
+      const tbody = document.getElementById('tbl-batch-body');
+      tbody.innerHTML = '';
+      if (batchItems.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-zinc-600">Belum ada treatment ditambahkan</td></tr>';
+        calculateTotal();
+        return;
+      }
+
+      batchItems.forEach((item, idx) => {
+        const subtotal = item.harga - item.diskonSatuan;
+        tbody.innerHTML += `
+          <tr>
+            <td class="p-3">${item.treatment}</td>
+            <td class="p-3">Rp ${item.harga.toLocaleString('id-ID')}</td>
+            <td class="p-3">Rp ${item.diskonSatuan.toLocaleString('id-ID')}</td>
+            <td class="p-3 font-bold text-white">Rp ${subtotal.toLocaleString('id-ID')}</td>
+            <td class="p-3 text-center">
+              <button onclick="removeBatchItem(${idx})" class="text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      let subtotalSum = batchItems.reduce((acc, curr) => acc + (curr.harga - curr.diskonSatuan), 0);
+      let diskonTambahan = Number(document.getElementById('inv-diskon-tambahan').value) || 0;
+      let totalAkhir = Math.max(0, subtotalSum - diskonTambahan);
+      document.getElementById('lbl-total-akhir').innerText = 'Rp ' + totalAkhir.toLocaleString('id-ID');
+      return totalAkhir;
+    }
+
+    async function submitInvoice() {
+      if (!selectedCust) { alert("Pilih pelanggan terlebih dahulu!"); return; }
+      if (batchItems.length === 0) { alert("Tambahkan minimal 1 item!"); return; }
+
+      const payload = {
+        action: 'createInvoice',
+        crew: selectedCust.crew,
+        nama: selectedCust.nama,
+        kontak: selectedCust.kontak,
+        brand: selectedCust.brand,
+        type: selectedCust.type,
+        size: selectedCust.size,
+        tanggalMasuk: selectedCust.tanggal,
+        items: batchItems,
+        diskonTambahan: Number(document.getElementById('inv-diskon-tambahan').value) || 0,
+        totalAkhir: calculateTotal()
+      };
+
+      try {
+        const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (data.status === 'success') {
+          alert("Faktur Berhasil Dibuat!");
+          window.open(data.pdfUrl, '_blank');
+          batchItems = [];
+          renderBatchTable();
+          fetchDashboardData();
+        }
+      } catch (err) { alert("Gagal memproses faktur."); }
+    }
+
+    function renderCustomerTable() {
+      const tbody = document.getElementById('tbl-cust-body');
+      tbody.innerHTML = '';
+      globalCustomers.forEach(c => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-zinc-900/50">
+            <td class="p-3 font-mono font-bold text-white">${c.id}</td>
+            <td class="p-3 font-bold">${c.nama}</td>
+            <td class="p-3">${c.kontak}</td>
+            <td class="p-3">${c.brand} ${c.type} (${c.size})</td>
+            <td class="p-3">${c.crew}</td>
+            <td class="p-3">
+              ${c.foto ? `<a href="${c.foto}" target="_blank" class="text-[10px] bg-zinc-800 hover:bg-white hover:text-black text-white px-2 py-1 rounded transition">Lihat Foto</a>` : '-'}
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderCRMTable() {
+      const tbody = document.getElementById('tbl-crm-body');
+      tbody.innerHTML = '';
+      globalCustomers.forEach(c => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-zinc-900/50">
+            <td class="p-3 font-bold text-white">${c.nama}</td>
+            <td class="p-3">${c.kontak}</td>
+            <td class="p-3">${c.brand} ${c.type}</td>
+            <td class="p-3 text-center">
+              <button onclick="sendWA('${c.nama}', '${c.kontak}', '${c.brand}', '${c.type}')" class="bg-white hover:bg-zinc-200 text-black text-[10px] font-extrabold px-3 py-1.5 rounded-lg flex items-center gap-1 mx-auto">
+                <i class="fa-brands fa-whatsapp"></i> KIRIM WA
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function sendWA(nama, kontak, brand, type) {
+      let tpl = document.getElementById('crm-template').value;
+      tpl = tpl.replace(/{NAMA}/g, nama)
+               .replace(/{BRAND}/g, brand)
+               .replace(/{TYPE}/g, type);
+
+      let cleanNum = kontak.replace(/[^0-9]/g, '');
+      if (cleanNum.startsWith('0')) cleanNum = '62' + cleanNum.slice(1);
+
+      window.open(`https://web.whatsapp.com/send?phone=${cleanNum}&text=${encodeURIComponent(tpl)}`, '_blank');
+    }
+  </script>
+</body>
+</html>
