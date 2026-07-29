@@ -12,7 +12,6 @@
     .mono-input { background-color: #121212; border: 1px solid #262626; color: #ffffff; }
     .mono-input:focus { border-color: #ffffff; outline: none; }
     
-    /* Mengubah Icon Kalender/Alat Bantu Tanggal Menjadi Warna Putih */
     input[type="date"]::-webkit-calendar-picker-indicator {
       filter: invert(1);
       cursor: pointer;
@@ -37,7 +36,6 @@
         </div>
       </div>
 
-      <!-- Tab Buttons Navigation -->
       <nav class="flex gap-1 bg-zinc-900/80 p-1 rounded-xl border border-zinc-800">
         <button onclick="switchTab('customer')" id="tab-customer" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-white text-black shadow-sm">
           <i class="fa-solid fa-user-plus"></i> PELANGGAN
@@ -58,7 +56,7 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
 
-    <!-- PAGE 1: CUSTOMER (Preview Hilang, Form Full Width) -->
+    <!-- PAGE 1: CUSTOMER -->
     <section id="page-customer" class="block">
       <div class="max-w-4xl mx-auto mono-card p-6 rounded-2xl">
         <h2 class="text-base font-bold mb-6 text-white uppercase tracking-wider flex items-center gap-2 border-b border-zinc-800 pb-3">
@@ -105,8 +103,9 @@
           </div>
 
           <div>
-            <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">FOTO SEPATU (UPLOAD DRIVE)</label>
+            <label class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-1">FOTO SEPATU (AUTOMATIC COMPRESS & DRIVE UPLOAD)</label>
             <input type="file" id="cust-foto" accept="image/*" onchange="processCustomerImage(event)" class="w-full mono-input rounded-xl p-2 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-white file:text-black file:font-bold">
+            <span id="compress-status" class="text-[10px] text-zinc-500 mt-1 block"></span>
           </div>
 
           <button type="submit" id="btn-save-cust" class="w-full bg-white hover:bg-zinc-200 text-black font-extrabold py-3.5 rounded-xl transition uppercase tracking-wider text-xs flex justify-center items-center gap-2 mt-4">
@@ -116,11 +115,10 @@
       </div>
     </section>
 
-    <!-- PAGE 2: INVOICE (With Spotlight Image) -->
+    <!-- PAGE 2: INVOICE -->
     <section id="page-invoice" class="hidden">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- Left Customer Info & Spotlight -->
         <div class="mono-card p-6 rounded-2xl space-y-5">
           <h2 class="text-base font-bold text-white uppercase tracking-wider border-b border-zinc-800 pb-3 flex items-center gap-2">
             <i class="fa-solid fa-user-check"></i> Data Pelanggan
@@ -139,7 +137,6 @@
             <div class="flex justify-between"><span class="text-zinc-500">Size:</span> <span id="inv-size" class="font-bold text-white">-</span></div>
           </div>
 
-          <!-- SPOTLIGHT FOTO SEPATU (TIDAK DICETAK DALAM PDF) -->
           <div class="border-t border-zinc-800 pt-4">
             <span class="block text-[10px] text-zinc-400 uppercase tracking-wider mb-2 text-center">Spotlight Sepatu Pelanggan</span>
             <div class="w-full aspect-square rounded-xl bg-black border border-zinc-800 overflow-hidden flex items-center justify-center">
@@ -149,7 +146,6 @@
           </div>
         </div>
 
-        <!-- Right Invoice Table & Batch Submit -->
         <div class="lg:col-span-2 mono-card p-6 rounded-2xl space-y-5">
           <h2 class="text-base font-bold text-white uppercase tracking-wider border-b border-zinc-800 pb-3 flex items-center gap-2">
             <i class="fa-solid fa-list"></i> Input Treatment & Transaksi
@@ -174,7 +170,6 @@
             </div>
           </div>
 
-          <!-- Batch Table -->
           <div class="overflow-x-auto border border-zinc-800 rounded-xl bg-black">
             <table class="w-full text-left text-xs">
               <thead class="bg-zinc-900 text-zinc-400 border-b border-zinc-800 uppercase">
@@ -203,7 +198,7 @@
             </div>
           </div>
 
-          <button onclick="submitInvoice()" class="w-full bg-white hover:bg-zinc-200 text-black font-extrabold py-3.5 rounded-xl transition uppercase tracking-wider text-xs flex justify-center items-center gap-2">
+          <button id="btn-submit-inv" onclick="submitInvoice()" class="w-full bg-white hover:bg-zinc-200 text-black font-extrabold py-3.5 rounded-xl transition uppercase tracking-wider text-xs flex justify-center items-center gap-2">
             <i class="fa-solid fa-print"></i> Submit & Cetak PDF Invoice
           </button>
         </div>
@@ -296,13 +291,14 @@
   </main>
 
   <script>
-    // GANTIKAN URL INI DENGAN WEB APP URL ANDA DARI GOOGLE APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/AKfycbwojmj8Lc-4F05MuGnv_VkRX97OeySLCDnEXHN3RvymjJFSN92PF3M-CsSn9M_IeRg31A/exec"; 
+    // MASUKKAN DEPLOYMENT URL WEB APP ANDA DI SINI
+    const API_URL = "https://script.google.com/macros/s/AKfycbx_YOUR_DEPLOYMENT_ID/exec"; 
 
     let globalOperators = { crews: [], treatments: [] };
     let globalCustomers = [];
     let batchItems = [];
     let selectedCust = null;
+    let base64Photo = "";
 
     window.onload = function() {
       document.getElementById('cust-tanggal').valueAsDate = new Date();
@@ -311,7 +307,6 @@
       fetchDashboardData();
     };
 
-    // Tab Navigation
     function switchTab(tabName) {
       ['customer', 'invoice', 'dashboard', 'crm'].forEach(t => {
         document.getElementById(`page-${t}`).classList.add('hidden');
@@ -365,23 +360,49 @@
       } catch (err) { console.error(err); }
     }
 
-    let base64Photo = "";
+    // AUTO-COMPRESS FOTO UNTUK MENCEGAH STUCK/TIMEOUT
     function processCustomerImage(event) {
       const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          base64Photo = e.target.result;
+      const statusLbl = document.getElementById('compress-status');
+      if (!file) return;
+
+      statusLbl.innerText = "Mengompresi foto...";
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800; // Resize max width/height
+
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Compress to JPEG 70% quality
+          base64Photo = canvas.toDataURL('image/jpeg', 0.7);
+          statusLbl.innerText = "Foto siap diunggah!";
         };
-        reader.readAsDataURL(file);
-      }
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     async function handleCustomerSubmit(e) {
       e.preventDefault();
       const btn = document.getElementById('btn-save-cust');
       btn.disabled = true;
-      btn.innerText = "SAVING...";
+      btn.innerText = "MENYIMPAN DATA...";
 
       const payload = {
         action: 'addCustomer',
@@ -399,32 +420,37 @@
         const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
         const data = await res.json();
         if (data.status === 'success') {
-          alert("Pelanggan Tersimpan: " + data.id);
+          alert("Pelanggan Tersimpan! ID: " + data.id);
           document.getElementById('form-customer').reset();
           document.getElementById('cust-tanggal').valueAsDate = new Date();
+          document.getElementById('compress-status').innerText = "";
           base64Photo = "";
           fetchCustomers();
           fetchDashboardData();
+        } else {
+          alert("Gagal: " + data.message);
         }
-      } catch (err) { alert("Gagal menyimpan."); }
-      btn.disabled = false;
-      btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan Data Pelanggan`;
+      } catch (err) { 
+        alert("Gagal menyimpan data. Pastikan jaringan stabil."); 
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Simpan Data Pelanggan`;
+      }
     }
 
-    // Select Customer in Invoice Page + Populate Spotlight Photo
     function onCustomerSelect() {
       const val = document.getElementById('inv-cust-search').value;
       const found = globalCustomers.find(c => c.nama.toLowerCase() === val.toLowerCase());
       if (found) {
         selectedCust = found;
-        document.getElementById('inv-crew').innerText = found.crew;
-        document.getElementById('inv-tgl').innerText = found.tanggal;
-        document.getElementById('inv-kontak').innerText = found.kontak;
-        document.getElementById('inv-brand-type').innerText = `${found.brand} / ${found.type}`;
-        document.getElementById('inv-size').innerText = found.size;
+        document.getElementById('inv-crew').innerText = found.crew || '-';
+        document.getElementById('inv-tgl').innerText = found.tanggal || '-';
+        document.getElementById('inv-kontak').innerText = found.kontak || '-';
+        document.getElementById('inv-brand-type').innerText = `${found.brand || ''} / ${found.type || ''}`;
+        document.getElementById('inv-size').innerText = found.size || '-';
 
         const spotlightImg = document.getElementById('inv-spotlight-img');
-        if (found.foto) {
+        if (found.foto && found.foto.startsWith('http')) {
           spotlightImg.src = found.foto;
         } else {
           spotlightImg.src = "https://via.placeholder.com/400x400/000000/333333?text=Tidak+Ada+Foto";
@@ -446,7 +472,7 @@
       const diskonSatuan = Number(document.getElementById('inv-diskon-satuan').value) || 0;
 
       if (!treatment || harga <= 0) {
-        alert("Isi treatment dan harga valid!");
+        alert("Isi treatment dan harga dengan benar!");
         return;
       }
 
@@ -499,7 +525,11 @@
 
     async function submitInvoice() {
       if (!selectedCust) { alert("Pilih pelanggan terlebih dahulu!"); return; }
-      if (batchItems.length === 0) { alert("Tambahkan minimal 1 item!"); return; }
+      if (batchItems.length === 0) { alert("Tambahkan minimal 1 item treatment!"); return; }
+
+      const btn = document.getElementById('btn-submit-inv');
+      btn.disabled = true;
+      btn.innerText = "MEMBUAT FAKTUR & PDF...";
 
       const payload = {
         action: 'createInvoice',
@@ -520,12 +550,19 @@
         const data = await res.json();
         if (data.status === 'success') {
           alert("Faktur Berhasil Dibuat!");
-          window.open(data.pdfUrl, '_blank');
+          if (data.pdfUrl) window.open(data.pdfUrl, '_blank');
           batchItems = [];
           renderBatchTable();
           fetchDashboardData();
+        } else {
+          alert("Gagal memproses faktur: " + data.message);
         }
-      } catch (err) { alert("Gagal memproses faktur."); }
+      } catch (err) { 
+        alert("Gagal memproses faktur. Silakan coba lagi."); 
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-print"></i> Submit & Cetak PDF Invoice`;
+      }
     }
 
     function renderCustomerTable() {
@@ -540,7 +577,7 @@
             <td class="p-3">${c.brand} ${c.type} (${c.size})</td>
             <td class="p-3">${c.crew}</td>
             <td class="p-3">
-              ${c.foto ? `<a href="${c.foto}" target="_blank" class="text-[10px] bg-zinc-800 hover:bg-white hover:text-black text-white px-2 py-1 rounded transition">Lihat Foto</a>` : '-'}
+              ${c.foto && c.foto.startsWith('http') ? `<a href="${c.foto}" target="_blank" class="text-[10px] bg-zinc-800 hover:bg-white hover:text-black text-white px-2 py-1 rounded transition">Lihat Foto</a>` : '-'}
             </td>
           </tr>
         `;
