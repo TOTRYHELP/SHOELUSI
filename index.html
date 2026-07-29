@@ -38,7 +38,6 @@
       cursor: pointer;
     }
     
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0a0a0a; }
     ::-webkit-scrollbar-thumb { background: #262626; border-radius: 3px; }
@@ -127,7 +126,7 @@
           </div>
 
           <div>
-            <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Foto Kondisi Sepatu (Auto Compress & Upload)</label>
+            <label class="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Upload Foto Sepatu (Auto Compress & Save Link)</label>
             <input type="file" id="cust-foto" accept="image/*" onchange="processCustomerImage(event)" class="w-full rock-input rounded-xl p-2 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:gold-bg file:text-black file:font-black cursor-pointer">
             <span id="compress-status" class="text-[11px] font-bold gold-accent mt-1.5 block"></span>
           </div>
@@ -153,18 +152,15 @@
             <datalist id="cust-suggestions"></datalist>
           </div>
 
-          <div class="space-y-2 text-xs bg-black/60 p-4 rounded-xl border border-zinc-800/80">
+          <div class="space-y-3 text-xs bg-black/60 p-4 rounded-xl border border-zinc-800/80">
             <div class="flex justify-between"><span class="text-zinc-500">Crew:</span> <span id="inv-crew" class="font-bold text-white">-</span></div>
             <div class="flex justify-between"><span class="text-zinc-500">Tgl Masuk:</span> <span id="inv-tgl" class="font-bold text-white">-</span></div>
             <div class="flex justify-between"><span class="text-zinc-500">Nomor HP:</span> <span id="inv-kontak" class="font-bold text-white">-</span></div>
             <div class="flex justify-between"><span class="text-zinc-500">Sepatu:</span> <span id="inv-brand-type" class="font-bold gold-accent">-</span></div>
             <div class="flex justify-between"><span class="text-zinc-500">Size:</span> <span id="inv-size" class="font-bold text-white">-</span></div>
-          </div>
-
-          <div class="border-t border-zinc-800 pt-4">
-            <span class="block text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2 text-center">Spotlight Foto Sepatu</span>
-            <div class="w-full aspect-square rounded-xl bg-black border border-zinc-800 overflow-hidden flex items-center justify-center">
-              <img id="inv-spotlight-img" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><rect width='100%' height='100%' fill='%23080808'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23444444' font-family='sans-serif' font-size='14'>TIDAK ADA FOTO</text></svg>" class="w-full h-full object-cover">
+            <div class="flex justify-between items-center pt-2 border-t border-zinc-800/80">
+              <span class="text-zinc-500">Foto Drive:</span> 
+              <span id="inv-foto-link" class="font-bold text-white">-</span>
             </div>
           </div>
         </div>
@@ -314,8 +310,7 @@
   </main>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwRHmB2ERQvCe3TH3Ng-TJAjnBxEUHmkiIP4AFjTIFe_V1eKcFQDID4DoHsIbsK9EX_xQ/exec"; 
-    const DEFAULT_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><rect width='100%' height='100%' fill='%23080808'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23444444' font-family='sans-serif' font-size='14'>TIDAK ADA FOTO</text></svg>";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwJkLToGAFiXenS4c64p58jqZFQFQbZN0HIY0ylWXsBFdLisrW7OeB3RsNd7EaVX3541Q/exec"; 
 
     let globalOperators = { crews: [], treatments: [] };
     let globalCustomers = [];
@@ -412,7 +407,7 @@
           ctx.drawImage(img, 0, 0, width, height);
 
           base64Photo = canvas.toDataURL('image/jpeg', 0.7);
-          statusLbl.innerText = "✓ Foto Siap Diunggah";
+          statusLbl.innerText = "✓ Foto Siap Upload";
         };
         img.src = e.target.result;
       };
@@ -470,11 +465,11 @@
         document.getElementById('inv-brand-type').innerText = `${found.brand || ''} / ${found.type || ''}`;
         document.getElementById('inv-size').innerText = found.size || '-';
 
-        const spotlightImg = document.getElementById('inv-spotlight-img');
+        const linkEl = document.getElementById('inv-foto-link');
         if (found.foto && found.foto.startsWith('http')) {
-          spotlightImg.src = found.foto;
+          linkEl.innerHTML = `<a href="${found.foto}" target="_blank" class="gold-accent underline font-bold">Buka Drive <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>`;
         } else {
-          spotlightImg.src = DEFAULT_SVG;
+          linkEl.innerText = '-';
         }
       }
     }
@@ -598,7 +593,7 @@
             <td class="p-3 uppercase gold-accent font-semibold">${c.brand} ${c.type} (${c.size})</td>
             <td class="p-3 uppercase">${c.crew}</td>
             <td class="p-3">
-              ${c.foto && c.foto.startsWith('http') ? `<a href="${c.foto}" target="_blank" class="text-[10px] bg-zinc-800 hover:gold-bg hover:text-black text-white font-bold px-2.5 py-1 rounded transition">Buka Drive</a>` : '-'}
+              ${c.foto && c.foto.startsWith('http') ? `<a href="${c.foto}" target="_blank" class="text-[10px] bg-zinc-800 hover:gold-bg hover:text-black text-white font-bold px-2.5 py-1 rounded transition">Buka Link Drive</a>` : '-'}
             </td>
           </tr>
         `;
