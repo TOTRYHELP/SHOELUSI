@@ -3,718 +3,404 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoes Laundry Management SPA</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>ROCK&ROLL CLEANING - CUSTOMER ENTRY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); }
+    :root {
+      --bg-color: #0d0d0d;
+      --card-bg: #141414;
+      --border-color: #2a2a2a;
+      --accent-white: #ffffff;
+      --accent-gray: #888888;
+      --accent-silver: #cccccc;
+      --hover-glow: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--accent-white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 20%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #fff, #444, #fff);
+    }
+
+    .header {
+      margin-bottom: 30px;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .header h1 {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 800;
+    }
+
+    .header p {
+      color: var(--accent-gray);
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-silver);
+    }
+
+    input, select {
+      background: #000;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 12px 15px;
+      font-size: 14px;
+      font-family: var(--font-body);
+      outline: none;
+      transition: all 0.2s ease;
+      border-radius: 0;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-white);
+      box-shadow: 0 0 10px var(--hover-glow);
+    }
+
+    .file-upload-box {
+      border: 1px dashed var(--border-color);
+      background: #080808;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .file-upload-box:hover {
+      border-color: var(--accent-white);
+      background: #111;
+    }
+
+    .file-upload-box input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .preview-img {
+      max-height: 120px;
+      margin-top: 10px;
+      display: none;
+      border: 1px solid var(--accent-white);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-submit {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 16px;
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      background: #ccc;
+      transform: translateY(-2px);
+    }
+
+    .btn-submit:disabled {
+      background: #444;
+      color: #888;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .status-msg {
+      margin-top: 15px;
+      padding: 12px;
+      font-size: 13px;
+      text-align: center;
+      display: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .status-msg.success {
+      background: #112614;
+      border: 1px solid #28a745;
+      color: #28a745;
+    }
+
+    .status-msg.error {
+      background: #281111;
+      border: 1px solid #dc3545;
+      color: #dc3545;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .full-width {
+        grid-column: span 1;
+      }
+      .container {
+        padding: 25px;
+      }
+    }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col md:flex-row">
+<body>
 
-  <!-- NAVIGATION SIDEBAR / TOPBAR -->
-  <aside class="w-full md:w-64 bg-slate-900 text-white flex-shrink-0 flex flex-col justify-between p-4 shadow-xl">
-    <div>
-      <!-- LOGO SPOTLIGHT CONTAINER -->
-      <div class="flex items-center space-x-3 mb-8 p-2 bg-slate-800 rounded-xl border border-slate-700">
-        <div class="w-12 h-12 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-xl text-white overflow-hidden" id="logoContainer">
-          <i class="fa-solid fa-shoe-prints"></i>
-        </div>
-        <div>
-          <h1 class="font-bold text-base leading-tight">SHOES SPA</h1>
-          <p class="text-xs text-slate-400">Management & CRM</p>
-        </div>
-      </div>
-
-      <!-- NAV BUTTONS -->
-      <nav class="space-y-2">
-        <button onclick="switchTab('customer')" id="btn-customer" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition text-indigo-400 bg-slate-800">
-          <i class="fa-solid fa-user-plus w-5"></i>
-          <span>1. Customer Input</span>
-        </button>
-        <button onclick="switchTab('invoice')" id="btn-invoice" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition text-slate-400 hover:bg-slate-800">
-          <i class="fa-solid fa-file-invoice-dollar w-5"></i>
-          <span>2. Invoice / Faktur</span>
-        </button>
-        <button onclick="switchTab('dashboard')" id="btn-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition text-slate-400 hover:bg-slate-800">
-          <i class="fa-solid fa-chart-line w-5"></i>
-          <span>3. Dashboard</span>
-        </button>
-        <button onclick="switchTab('crm')" id="btn-crm" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium transition text-slate-400 hover:bg-slate-800">
-          <i class="fa-brands fa-whatsapp w-5"></i>
-          <span>4. CRM WhatsApp</span>
-        </button>
-      </nav>
+  <div class="container">
+    <div class="header">
+      <h1>Data Pelanggan</h1>
+      <p>Customer Registration Form</p>
     </div>
 
-    <div class="mt-8 pt-4 border-t border-slate-800 text-xs text-slate-500 text-center">
-      Modern SPA Web App v2.0
-    </div>
-  </aside>
+    <form id="customerForm">
+      <div class="form-grid">
+        
+        <div class="form-group">
+          <label for="crew">Crew / Operator *</label>
+          <select id="crew" required>
+            <option value="">-- MEMUAT CREW --</option>
+          </select>
+        </div>
 
-  <!-- MAIN CONTENT AREA -->
-  <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+        <div class="form-group">
+          <label for="tanggal">Tanggal *</label>
+          <input type="date" id="tanggal" required>
+        </div>
 
-    <!-- TOP CONFIG / SCRIPT URL ALERT -->
-    <div id="configBar" class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
-      <div class="flex items-center space-x-2 text-amber-800">
-        <i class="fa-solid fa-circle-info text-amber-600 text-base"></i>
-        <span><strong>Deployment Web App URL Apps Script:</strong> Masukkan URL Web App Apps Script untuk sync backend live.</span>
+        <div class="form-group full-width">
+          <label for="nama">Nama Pelanggan *</label>
+          <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="kontak">Nomor HP / Whatsapp *</label>
+          <input type="tel" id="kontak" placeholder="08xxxxxxxxxx" required>
+        </div>
+
+        <div class="form-group">
+          <label for="brand">Brand *</label>
+          <input type="text" id="brand" placeholder="Nike, Adidas, Vans..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="type">Type / Model *</label>
+          <input type="text" id="type" placeholder="Jordan 1, Old Skool..." required>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="size">Size *</label>
+          <input type="text" id="size" placeholder="EUR 42 / 27cm" required>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Upload Foto Sepatu/Barang</label>
+          <div class="file-upload-box">
+            <span id="fileLabel">Klik / Drop Foto di Sini (PNG, JPG)</span>
+            <input type="file" id="foto" accept="image/*">
+            <img id="preview" class="preview-img" alt="Preview">
+          </div>
+        </div>
+
+        <button type="submit" id="btnSubmit" class="btn-submit full-width">SIMPAN DATA</button>
+
       </div>
-      <div class="flex items-center space-x-2 w-full md:w-auto">
-        <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="px-3 py-2 border rounded-lg w-full md:w-96 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500">
-        <button onclick="saveScriptUrl()" class="px-4 py-2 bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-700 transition">Simpan</button>
-      </div>
-    </div>
+    </form>
 
-    <!-- HALAMAN 1: CUSTOMER INPUT -->
-    <section id="tab-customer" class="tab-content space-y-6">
-      <div class="flex justify-between items-center border-b pb-4">
-        <div>
-          <h2 class="text-2xl font-bold text-slate-900">Input Data Pelanggan</h2>
-          <p class="text-slate-500 text-sm">Tambahkan data transaksi sepatu pelanggan baru ke sheet DATA PELANGGAN</p>
-        </div>
-      </div>
+    <div id="statusMsg" class="status-msg"></div>
+  </div>
 
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 max-w-4xl">
-        <form id="formCustomer" onsubmit="handleCustomerSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Crew / Operator</label>
-            <select id="custCrew" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-              <option value="">-- Pilih Crew --</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tanggal</label>
-            <input type="date" id="custTanggal" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Nama Pelanggan</label>
-            <input type="text" id="custNama" required placeholder="Contoh: Budi Santoso" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">No. Kontak / WA</label>
-            <input type="text" id="custKontak" required placeholder="628123456789" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Brand Sepatu</label>
-            <input type="text" id="custBrand" placeholder="Nike, Adidas, Jordan..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Type / Model Sepatu</label>
-            <input type="text" id="custType" placeholder="Air Jordan 1, Ultraboost..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Size Sepatu</label>
-            <input type="text" id="custSize" placeholder="42 / 9 US" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Upload Foto Sepatu</label>
-            <input type="file" id="custFoto" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-          </div>
-
-          <div class="md:col-span-2 pt-4">
-            <button type="submit" id="btnSaveCust" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow-lg hover:bg-indigo-700 transition flex items-center justify-center space-x-2">
-              <i class="fa-solid fa-floppy-disk"></i>
-              <span>Simpan Data Pelanggan</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- HALAMAN 2: INVOICE & BATCH TABLE -->
-    <section id="tab-invoice" class="tab-content hidden space-y-6">
-      <div class="flex justify-between items-center border-b pb-4">
-        <div>
-          <h2 class="text-2xl font-bold text-slate-900">Buat Invoice / Faktur</h2>
-          <p class="text-slate-500 text-sm">Pilih data pelanggan & kelola item treatment sebelum mencetak PDF</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- LEFT 2 COLS: CUSTOMER SELECTOR & TREATMENT BATCH FORM -->
-        <div class="lg:col-span-2 space-y-6">
-          
-          <!-- CUSTOMER SUGGESTION SEARCH -->
-          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 relative">
-            <h3 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">1. Pilih / Filter Pelanggan</h3>
-            <div class="relative">
-              <input type="text" id="invSearchCust" oninput="filterCustomerSuggestions(this.value)" placeholder="Ketik Nama Pelanggan..." class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none">
-              <div id="custSuggestions" class="absolute z-20 left-0 right-0 bg-white border border-slate-200 rounded-xl shadow-xl mt-1 max-h-48 overflow-y-auto hidden"></div>
-            </div>
-
-            <!-- AUTO-FILLED CUSTOMER DETAILS -->
-            <div id="selectedCustBox" class="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-xl grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs hidden">
-              <div><span class="text-slate-400 block">ID Pelanggan:</span><strong id="dispCustId" class="text-indigo-600">-</strong></div>
-              <div><span class="text-slate-400 block">Nama:</span><strong id="dispCustNama">-</strong></div>
-              <div><span class="text-slate-400 block">Kontak:</span><strong id="dispCustKontak">-</strong></div>
-              <div><span class="text-slate-400 block">Crew:</span><strong id="dispCustCrew">-</strong></div>
-              <div><span class="text-slate-400 block">Tanggal Masuk:</span><strong id="dispCustTanggal">-</strong></div>
-              <div><span class="text-slate-400 block">Sepatu:</span><strong id="dispCustSepatu">-</strong></div>
-            </div>
-          </div>
-
-          <!-- INPUT TREATMENT FORM -->
-          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-            <h3 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">2. Tambah Treatment ke Table</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-              <div class="sm:col-span-2 relative">
-                <label class="block text-xs text-slate-500 mb-1">Treatment / Layanan</label>
-                <input type="text" id="invTreatmentInput" oninput="filterTreatmentSuggestions(this.value)" placeholder="Ketik & Pilih Treatment..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
-                <div id="treatmentSuggestions" class="absolute z-20 left-0 right-0 bg-white border border-slate-200 rounded-xl shadow-xl mt-1 max-h-40 overflow-y-auto hidden"></div>
-              </div>
-              <div>
-                <label class="block text-xs text-slate-500 mb-1">Harga (Rp)</label>
-                <input type="number" id="invHargaInput" placeholder="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
-              </div>
-              <div>
-                <label class="block text-xs text-slate-500 mb-1">Diskon Satuan (Rp)</label>
-                <input type="number" id="invDiskonSatuanInput" value="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
-              </div>
-              <div class="sm:col-span-2 flex items-end">
-                <button type="button" onclick="addTreatmentToBatch()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-2 rounded-xl text-sm font-medium transition">
-                  <i class="fa-solid fa-plus mr-1"></i> Tambahkan Ke Tabel Batch
-                </button>
-              </div>
-            </div>
-
-            <!-- BATCH TABLE -->
-            <div class="overflow-x-auto mt-4">
-              <table class="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr class="bg-slate-100 text-slate-600">
-                    <th class="p-2 border-b">Treatment</th>
-                    <th class="p-2 border-b">Harga</th>
-                    <th class="p-2 border-b">Diskon Satuan</th>
-                    <th class="p-2 border-b">Subtotal</th>
-                    <th class="p-2 border-b text-center">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="batchTableBody">
-                  <tr>
-                    <td colspan="5" class="p-4 text-center text-slate-400 italic">Belum ada treatment ditambahkan.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- SUMMARY & GRAND TOTAL -->
-            <div class="mt-6 pt-4 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Diskon Tambahan Akhir (Rp)</label>
-                <input type="number" id="invDiskonTambahan" oninput="calculateGrandTotal()" value="0" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
-              </div>
-              <div class="text-right">
-                <span class="text-xs text-slate-500 block">Grand Total:</span>
-                <span id="dispGrandTotal" class="text-2xl font-extrabold text-indigo-600">Rp 0</span>
-              </div>
-            </div>
-
-            <button onclick="submitAndPrintInvoice()" class="mt-6 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-sm shadow-lg transition flex items-center justify-center space-x-2">
-              <i class="fa-solid fa-print"></i>
-              <span>Submit & Cetak PDF Invoice</span>
-            </button>
-          </div>
-
-        </div>
-
-        <!-- RIGHT 1 COL: SPOTLIGHT FOTO SEPATU PELANGGAN TERPILIH -->
-        <div class="space-y-6">
-          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-            <h3 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider flex items-center space-x-2">
-              <i class="fa-solid fa-camera text-indigo-600"></i>
-              <span>Spotlight Foto Sepatu</span>
-            </h3>
-            <p class="text-xs text-slate-400 mb-4">Menampilkan foto sepatu dari Drive berdasarkan pelanggan yang dipilih.</p>
-            
-            <div id="spotlightContainer" class="w-full h-64 rounded-xl border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative bg-slate-50">
-              <i class="fa-solid fa-image text-4xl mb-2"></i>
-              <span class="text-xs">Pilih pelanggan untuk melihat foto</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- HALAMAN 3: DASHBOARD -->
-    <section id="tab-dashboard" class="tab-content hidden space-y-6">
-      <div class="flex justify-between items-center border-b pb-4">
-        <div>
-          <h2 class="text-2xl font-bold text-slate-900">Dashboard Utama</h2>
-          <p class="text-slate-500 text-sm">Ringkasan statistik bisnis dan data pelanggan</p>
-        </div>
-        <button onclick="loadDashboardData()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-semibold">
-          <i class="fa-solid fa-rotate mr-1"></i> Refresh
-        </button>
-      </div>
-
-      <!-- METRIC CARDS -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
-          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl">
-            <i class="fa-solid fa-users"></i>
-          </div>
-          <div>
-            <p class="text-xs text-slate-400 uppercase font-bold">Total Pelanggan</p>
-            <h3 id="dashTotalCust" class="text-2xl font-extrabold text-slate-800">0</h3>
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
-          <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
-            <i class="fa-solid fa-receipt"></i>
-          </div>
-          <div>
-            <p class="text-xs text-slate-400 uppercase font-bold">Total Faktur</p>
-            <h3 id="dashTotalInv" class="text-2xl font-extrabold text-slate-800">0</h3>
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
-          <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
-            <i class="fa-solid fa-wallet"></i>
-          </div>
-          <div>
-            <p class="text-xs text-slate-400 uppercase font-bold">Total Omset</p>
-            <h3 id="dashTotalRevenue" class="text-2xl font-extrabold text-emerald-600">Rp 0</h3>
-          </div>
-        </div>
-      </div>
-
-      <!-- DASHBOARD TABLE -->
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <h3 class="text-base font-bold text-slate-800 mb-4">Tabel Data Pelanggan</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="bg-slate-100 text-slate-600 uppercase">
-                <th class="p-3 border-b">ID</th>
-                <th class="p-3 border-b">Crew</th>
-                <th class="p-3 border-b">Tanggal</th>
-                <th class="p-3 border-b">Nama</th>
-                <th class="p-3 border-b">Kontak</th>
-                <th class="p-3 border-b">Sepatu</th>
-                <th class="p-3 border-b">Foto Drive</th>
-              </tr>
-            </thead>
-            <tbody id="dashCustTableBody">
-              <tr>
-                <td colspan="7" class="p-4 text-center text-slate-400">Memuat data...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- HALAMAN 4: CRM WA WEB -->
-    <section id="tab-crm" class="tab-content hidden space-y-6">
-      <div class="flex justify-between items-center border-b pb-4">
-        <div>
-          <h2 class="text-2xl font-bold text-slate-900">CRM WhatsApp Marketing</h2>
-          <p class="text-slate-500 text-sm">Kirim pesan WhatsApp kustomisasi langsung ke pelanggan</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- CUSTOM CRM TEMPLATE FORM -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-          <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider">Kustomisasi Pesan WA</h3>
-          
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Pilih Pelanggan Target</label>
-            <select id="crmCustSelect" onchange="updateCrmPreview()" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
-              <option value="">-- Pilih Pelanggan --</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Template Pesan</label>
-            <textarea id="crmTemplate" rows="6" oninput="updateCrmPreview()" class="w-full p-3 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 outline-none">Halo Kak {NAMA}, sepatu {BRAND} {TYPE} Kakak telah selesai kami kerjakan. Silakan diambil di store kami ya Kak! Terima kasih.</textarea>
-            <p class="text-[10px] text-slate-400 mt-1">Variabel otomatis: {NAMA}, {BRAND}, {TYPE}, {SIZE}, {CREW}</p>
-          </div>
-        </div>
-
-        <!-- PREVIEW & DIRECT LINK -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 flex flex-col justify-between">
-          <div>
-            <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider mb-2">Preview Pesan</h3>
-            <div id="crmPreviewBox" class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-slate-700 whitespace-pre-wrap min-h-[160px]">
-              Pilih pelanggan untuk melihat preview pesan WhatsApp.
-            </div>
-          </div>
-
-          <button onclick="sendWhatsAppMessage()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-sm shadow-lg transition flex items-center justify-center space-x-2">
-            <i class="fa-brands fa-whatsapp text-lg"></i>
-            <span>Buka WhatsApp Web & Kirim</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- JAVASCRIPT SPA LOGIC -->
   <script>
-    // Global State
-    let appData = {
-      crews: [],
-      treatments: [],
-      customers: []
-    };
-    
-    let batchItems = [];
-    let selectedCustomerForInvoice = null;
+    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT SETELAH DEPLOYMENT DILAKUKAN
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzwLUZdBt_t7k74Md1vfHvmLXO4UBFmi07aIkkEJRsCCH5fX6ywk58BrmmFNNVxCygX/exec"; 
 
-    // Load Web App URL from localStorage or default
-    let SCRIPT_URL = localStorage.getItem('APPS_SCRIPT_URL') || '';
+    let fotoBase64 = "";
 
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('scriptUrlInput').value = SCRIPT_URL;
-      document.getElementById('custTanggal').valueAsDate = new Date();
-      fetchInitialData();
+    document.getElementById('tanggal').valueAsDate = new Date();
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run.withSuccessHandler(populateCrew).getOperatorList();
+      } else {
+        fetch(WEB_APP_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'getOperators' })
+        })
+        .then(res => res.json())
+        .then(res => { if(res.success) populateCrew(res.data); })
+        .catch(err => console.error("Error fetching crew:", err));
+      }
     });
 
-    function saveScriptUrl() {
-      const url = document.getElementById('scriptUrlInput').value.trim();
-      localStorage.setItem('APPS_SCRIPT_URL', url);
-      SCRIPT_URL = url;
-      alert('URL Apps Script disimpan!');
-      fetchInitialData();
-    }
-
-    // Call Backend (Google Apps Script / Web App API)
-    function callBackend(action, data, callback) {
-      if (typeof google !== 'undefined' && google.script && google.script.run) {
-        // Native Apps Script Environment
-        google.script.run.withSuccessHandler(callback)[action](data);
-      } else if (SCRIPT_URL) {
-        // GitHub Pages / External Web App deployment via JSONP/Fetch
-        fetch(SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: action, data: data })
-        })
-        .then(() => {
-          // Alternative fallback for fetching GET data
-          if (action === 'getInitialData' || action === 'getDashboardAndCrmData') {
-            fetch(`${SCRIPT_URL}?action=${action}`)
-              .then(res => res.json())
-              .then(resData => callback(resData));
-          } else {
-            callback({ status: 'success', message: 'Request dikirim ke Apps Script' });
-          }
-        })
-        .catch(err => console.error(err));
-      } else {
-        console.warn('Apps Script URL belum dikonfigurasi. Menggunakan data simulasi.');
-        // Fallback demo data
-        if (action === 'getInitialData') {
-          callback({
-            crews: ['Budi Operator', 'Andi Operator'],
-            treatments: [{nama: 'Deep Clean', harga: 50000}, {nama: 'Unyellowing', harga: 75000}],
-            customers: [{crew: 'Budi Operator', id: 'CUST-0001', tanggal: '2026-07-30', nama: 'Contoh User', kontak: '628123456789', brand: 'Nike', type: 'Air Max', size: '42', foto: 'https://via.placeholder.com/400'}]
-          });
-        }
-      }
-    }
-
-    function fetchInitialData() {
-      callBackend('getInitialData', null, (res) => {
-        if (!res) return;
-        appData = res;
-        populateCrews();
-        populateCrmSelect();
+    function populateCrew(crewList) {
+      const select = document.getElementById('crew');
+      select.innerHTML = '<option value="">-- PILIH CREW --</option>';
+      crewList.forEach(crew => {
+        const option = document.createElement('option');
+        option.value = crew;
+        option.textContent = crew;
+        select.appendChild(option);
       });
     }
 
-    function populateCrews() {
-      const select = document.getElementById('custCrew');
-      select.innerHTML = '<option value="">-- Pilih Crew --</option>';
-      appData.crews.forEach(c => {
-        select.innerHTML += `<option value="${c}">${c}</option>`;
-      });
-    }
-
-    // TAB SWITCHING
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('bg-slate-800', 'text-indigo-400');
-        btn.classList.add('text-slate-400');
-      });
-
-      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-      const activeBtn = document.getElementById(`btn-${tabName}`);
-      activeBtn.classList.add('bg-slate-800', 'text-indigo-400');
-
-      if (tabName === 'dashboard') loadDashboardData();
-    }
-
-    // FORM CUSTOMER SUBMIT
-    function handleCustomerSubmit(e) {
-      e.preventDefault();
-      const fileInput = document.getElementById('custFoto');
-      const btn = document.getElementById('btnSaveCust');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
-
-      const formData = {
-        crew: document.getElementById('custCrew').value,
-        tanggal: document.getElementById('custTanggal').value,
-        nama: document.getElementById('custNama').value,
-        kontak: document.getElementById('custKontak').value,
-        brand: document.getElementById('custBrand').value,
-        type: document.getElementById('custType').value,
-        size: document.getElementById('custSize').value,
-        photoBase64: null
-      };
-
-      if (fileInput.files.length > 0) {
+    document.getElementById('foto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
         const reader = new FileReader();
         reader.onload = function(evt) {
-          formData.photoBase64 = evt.target.result;
-          saveCustomerData(formData);
+          fotoBase64 = evt.target.result;
+          const img = document.getElementById('preview');
+          img.src = fotoBase64;
+          img.style.display = 'block';
+          document.getElementById('fileLabel').textContent = file.name;
         };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        saveCustomerData(formData);
+        reader.readAsDataURL(file);
       }
-    }
+    });
 
-    function saveCustomerData(formData) {
-      callBackend('saveCustomer', formData, (res) => {
-        alert('Data Pelanggan Berhasil Disimpan!');
-        document.getElementById('formCustomer').reset();
-        document.getElementById('custTanggal').valueAsDate = new Date();
-        document.getElementById('btnSaveCust').disabled = false;
-        document.getElementById('btnSaveCust').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Simpan Data Pelanggan</span>';
-        fetchInitialData();
-      });
-    }
+    document.getElementById('customerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
 
-    // INVOICE SUGGESTIONS & SPOTLIGHT
-    function filterCustomerSuggestions(query) {
-      const box = document.getElementById('custSuggestions');
-      if (!query) { box.classList.add('hidden'); return; }
+      const btn = document.getElementById('btnSubmit');
+      const status = document.getElementById('statusMsg');
+      
+      btn.disabled = true;
+      btn.innerText = "PROSES SIMPAN...";
+      status.style.display = 'none';
 
-      const filtered = appData.customers.filter(c => c.nama.toLowerCase().includes(query.toLowerCase()));
-      if (filtered.length === 0) {
-        box.classList.add('hidden');
-        return;
-      }
-
-      box.innerHTML = '';
-      filtered.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'p-3 hover:bg-slate-100 cursor-pointer border-b border-slate-100 text-xs';
-        item.innerHTML = `<strong>${c.nama}</strong> - ${c.brand} ${c.type} (${c.kontak})`;
-        item.onclick = () => selectCustomerForInvoice(c);
-        box.appendChild(item);
-      });
-      box.classList.remove('hidden');
-    }
-
-    function selectCustomerForInvoice(cust) {
-      selectedCustomerForInvoice = cust;
-      document.getElementById('custSuggestions').classList.add('hidden');
-      document.getElementById('invSearchCust').value = cust.nama;
-
-      document.getElementById('dispCustId').innerText = cust.id;
-      document.getElementById('dispCustNama').innerText = cust.nama;
-      document.getElementById('dispCustKontak').innerText = cust.kontak;
-      document.getElementById('dispCustCrew').innerText = cust.crew;
-      document.getElementById('dispCustTanggal').innerText = cust.tanggal;
-      document.getElementById('dispCustSepatu').innerText = `${cust.brand} ${cust.type} (Sz: ${cust.size})`;
-      document.getElementById('selectedCustBox').classList.remove('hidden');
-
-      // SPOTLIGHT IMAGE ONLY ON INVOICE PAGE
-      const spotlight = document.getElementById('spotlightContainer');
-      if (cust.foto) {
-        spotlight.innerHTML = `<img src="${cust.foto}" class="w-full h-full object-cover rounded-xl" alt="Sepatu Pelanggan">`;
-      } else {
-        spotlight.innerHTML = `<div class="text-center p-4"><i class="fa-solid fa-image text-3xl mb-2 text-slate-300"></i><p class="text-xs text-slate-400">Foto tidak tersedia di Drive</p></div>`;
-      }
-    }
-
-    // TREATMENT SUGGESTIONS & BATCH TABLE
-    function filterTreatmentSuggestions(query) {
-      const box = document.getElementById('treatmentSuggestions');
-      if (!query) { box.classList.add('hidden'); return; }
-
-      const filtered = appData.treatments.filter(t => t.nama.toLowerCase().includes(query.toLowerCase()));
-      if (filtered.length === 0) { box.classList.add('hidden'); return; }
-
-      box.innerHTML = '';
-      filtered.forEach(t => {
-        const item = document.createElement('div');
-        item.className = 'p-2.5 hover:bg-slate-100 cursor-pointer text-xs flex justify-between';
-        item.innerHTML = `<span>${t.nama}</span> <strong>Rp ${t.harga.toLocaleString('id-ID')}</strong>`;
-        item.onclick = () => {
-          document.getElementById('invTreatmentInput').value = t.nama;
-          document.getElementById('invHargaInput').value = t.harga;
-          box.classList.add('hidden');
-        };
-        box.appendChild(item);
-      });
-      box.classList.remove('hidden');
-    }
-
-    function addTreatmentToBatch() {
-      const treatment = document.getElementById('invTreatmentInput').value;
-      const harga = Number(document.getElementById('invHargaInput').value) || 0;
-      const diskonSatuan = Number(document.getElementById('invDiskonSatuanInput').value) || 0;
-
-      if (!treatment) { alert('Isi nama treatment!'); return; }
-
-      batchItems.push({ treatment, harga, diskonSatuan });
-      document.getElementById('invTreatmentInput').value = '';
-      document.getElementById('invHargaInput').value = '';
-      document.getElementById('invDiskonSatuanInput').value = '0';
-
-      renderBatchTable();
-    }
-
-    function removeBatchItem(index) {
-      batchItems.splice(index, 1);
-      renderBatchTable();
-    }
-
-    function renderBatchTable() {
-      const tbody = document.getElementById('batchTableBody');
-      if (batchItems.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 italic">Belum ada treatment ditambahkan.</td></tr>`;
-        calculateGrandTotal();
-        return;
-      }
-
-      tbody.innerHTML = '';
-      batchItems.forEach((item, idx) => {
-        const subtotal = item.harga - item.diskonSatuan;
-        tbody.innerHTML += `
-          <tr class="border-b">
-            <td class="p-2"><input type="text" value="${item.treatment}" onchange="batchItems[${idx}].treatment=this.value; calculateGrandTotal();" class="border rounded px-2 py-1 w-full"></td>
-            <td class="p-2"><input type="number" value="${item.harga}" onchange="batchItems[${idx}].harga=Number(this.value); calculateGrandTotal();" class="border rounded px-2 py-1 w-24"></td>
-            <td class="p-2"><input type="number" value="${item.diskonSatuan}" onchange="batchItems[${idx}].diskonSatuan=Number(this.value); calculateGrandTotal();" class="border rounded px-2 py-1 w-20"></td>
-            <td class="p-2 font-semibold">Rp ${subtotal.toLocaleString('id-ID')}</td>
-            <td class="p-2 text-center"><button onclick="removeBatchItem(${idx})" class="text-rose-500 hover:text-rose-700"><i class="fa-solid fa-trash"></i></button></td>
-          </tr>
-        `;
-      });
-
-      calculateGrandTotal();
-    }
-
-    function calculateGrandTotal() {
-      let subtotal = 0;
-      batchItems.forEach(i => subtotal += (i.harga - i.diskonSatuan));
-      const diskonTambahan = Number(document.getElementById('invDiskonTambahan').value) || 0;
-      const grandTotal = Math.max(0, subtotal - diskonTambahan);
-      document.getElementById('dispGrandTotal').innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
-      return { subtotal, diskonTambahan, grandTotal };
-    }
-
-    function submitAndPrintInvoice() {
-      if (!selectedCustomerForInvoice) { alert('Pilih pelanggan terlebih dahulu!'); return; }
-      if (batchItems.length === 0) { alert('Tambahkan minimal 1 treatment!'); return; }
-
-      const totals = calculateGrandTotal();
       const payload = {
-        customer: selectedCustomerForInvoice,
-        items: batchItems,
-        subtotal: totals.subtotal,
-        diskonTambahan: totals.diskonTambahan,
-        grandTotal: totals.grandTotal
+        crew: document.getElementById('crew').value,
+        tanggal: document.getElementById('tanggal').value,
+        nama: document.getElementById('nama').value,
+        kontak: document.getElementById('kontak').value,
+        brand: document.getElementById('brand').value,
+        type: document.getElementById('type').value,
+        size: document.getElementById('size').value,
+        fotoBase64: fotoBase64
       };
 
-      callBackend('saveInvoice', payload, (res) => {
-        alert('Invoice Berhasil Dibuat!');
-        if (res.pdfUrl) {
-          window.open(res.pdfUrl, '_blank');
-        }
-      });
-    }
-
-    // DASHBOARD DATA LOAD
-    function loadDashboardData() {
-      callBackend('getDashboardAndCrmData', null, (res) => {
-        if (!res) return;
-        document.getElementById('dashTotalCust').innerText = res.totalCustomers || 0;
-        document.getElementById('dashTotalInv').innerText = res.totalInvoices || 0;
-        document.getElementById('dashTotalRevenue').innerText = `Rp ${(res.totalRevenue || 0).toLocaleString('id-ID')}`;
-
-        const tbody = document.getElementById('dashCustTableBody');
-        tbody.innerHTML = '';
-        res.customerList.forEach(c => {
-          tbody.innerHTML += `
-            <tr class="border-b hover:bg-slate-50">
-              <td class="p-3 font-semibold text-indigo-600">${c.id}</td>
-              <td class="p-3">${c.crew}</td>
-              <td class="p-3">${c.tanggal}</td>
-              <td class="p-3 font-medium">${c.nama}</td>
-              <td class="p-3">${c.kontak}</td>
-              <td class="p-3">${c.brand} ${c.type} (${c.size})</td>
-              <td class="p-3">${c.foto ? `<a href="${c.foto}" target="_blank" class="text-indigo-600 underline"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Drive</a>` : '-'}</td>
-            </tr>
-          `;
-        });
-      });
-    }
-
-    // CRM WA WEB LOGIC
-    function populateCrmSelect() {
-      const select = document.getElementById('crmCustSelect');
-      select.innerHTML = '<option value="">-- Pilih Pelanggan --</option>';
-      appData.customers.forEach((c, idx) => {
-        select.innerHTML += `<option value="${idx}">${c.nama} - ${c.brand} ${c.type} (${c.kontak})</option>`;
-      });
-    }
-
-    function updateCrmPreview() {
-      const idx = document.getElementById('crmCustSelect').value;
-      const tpl = document.getElementById('crmTemplate').value;
-
-      if (idx === "") {
-        document.getElementById('crmPreviewBox').innerText = 'Pilih pelanggan untuk melihat preview pesan WhatsApp.';
-        return;
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(onSuccess)
+          .withFailureHandler(onError)
+          .saveCustomerData(payload);
+      } else {
+        fetch(WEB_APP_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'saveCustomer', payload: payload })
+        })
+        .then(res => res.json())
+        .then(res => {
+          if (res.success) onSuccess(res.data);
+          else onError(res.error);
+        })
+        .catch(err => onError(err));
       }
+    });
 
-      const cust = appData.customers[idx];
-      let msg = tpl
-        .replace(/{NAMA}/g, cust.nama)
-        .replace(/{BRAND}/g, cust.brand)
-        .replace(/{TYPE}/g, cust.type)
-        .replace(/{SIZE}/g, cust.size)
-        .replace(/{CREW}/g, cust.crew);
+    function onSuccess(res) {
+      const btn = document.getElementById('btnSubmit');
+      const status = document.getElementById('statusMsg');
+      
+      btn.disabled = false;
+      btn.innerText = "SIMPAN DATA";
+      
+      status.className = 'status-msg success';
+      status.innerHTML = `DATA BERHASIL DISIMPAN!<br><b>ID: ${res.id}</b>`;
+      status.style.display = 'block';
 
-      document.getElementById('crmPreviewBox').innerText = msg;
+      document.getElementById('customerForm').reset();
+      document.getElementById('tanggal').valueAsDate = new Date();
+      document.getElementById('preview').style.display = 'none';
+      document.getElementById('fileLabel').textContent = "Klik / Drop Foto di Sini (PNG, JPG)";
+      fotoBase64 = "";
     }
 
-    function sendWhatsAppMessage() {
-      const idx = document.getElementById('crmCustSelect').value;
-      if (idx === "") { alert('Pilih pelanggan terlebih dahulu!'); return; }
-
-      const cust = appData.customers[idx];
-      const msg = document.getElementById('crmPreviewBox').innerText;
-      let phone = cust.kontak.replace(/[^0-9]/g, '');
-      if (phone.startsWith('0')) phone = '62' + phone.slice(1);
-
-      const waUrl = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
-      window.open(waUrl, '_blank');
+    function onError(err) {
+      const btn = document.getElementById('btnSubmit');
+      const status = document.getElementById('statusMsg');
+      
+      btn.disabled = false;
+      btn.innerText = "SIMPAN DATA";
+      
+      status.className = 'status-msg error';
+      status.innerText = "GAGAL MENYIMPAN DATA: " + err;
+      status.style.display = 'block';
     }
   </script>
 </body>
